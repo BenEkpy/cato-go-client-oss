@@ -104,6 +104,30 @@ type UpdateSocketInterfacePayload struct {
 	SocketInterfaceId string `json:"socketInterfaceId,omitempty"`
 }
 
+type UpdateStaticHostPayload struct {
+	HostId string `json:"hostId"`
+}
+
+type AddStaticHostPayload struct {
+	HostId string `json:"hostId,omitempty"`
+}
+
+type RemoveStaticHostPayload struct {
+	HostId string `json:"hostId,omitempty"`
+}
+
+type AddStaticHostInput struct {
+	Name       string  `json:"name,omitempty"`
+	Ip         string  `json:"ip,omitempty"`
+	MacAddress *string `json:"macAddress,omitempty"`
+}
+
+type UdpdateStaticHostInput struct {
+	Name       string  `json:"name,omitempty"`
+	Ip         string  `json:"ip,omitempty"`
+	MacAddress *string `json:"macAddress,omitempty"`
+}
+
 func (c *Client) AddSocketSite(input AddSocketSiteInput) (*AddSocketSitePayload, error) {
 
 	query := graphQLRequest{
@@ -250,4 +274,40 @@ func (c *Client) UpdateSocketInterface(siteId string, socketInterfaceId string, 
 	}
 
 	return &response.Site.UpdateSocketInterface, nil
+}
+
+func (c *Client) addStaticHost(siteId string, input AddStaticHostInput) (*AddStaticHostPayload, error) {
+	query := graphQLRequest{
+		Query: `
+		mutation addStaticHost($accountId:ID!,$siteId: ID!, $input: AddStaticHostInput!) {
+		site(accountId:$accountId){
+			addStaticHost(siteId:$siteId, input:$input){
+			hostId
+			}
+		}
+		}`,
+		Variables: map[string]interface{}{
+			"accountId": c.accountId,
+			"siteId":    siteId,
+			"input":     input,
+		},
+	}
+
+	body, err := c.do(query)
+	if err != nil {
+		return nil, err
+	}
+
+	var response struct {
+		Site struct {
+			addStaticHost AddStaticHostPayload
+		}
+	}
+
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.Site.addStaticHost, nil
 }
