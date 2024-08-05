@@ -64,12 +64,6 @@ type UpdateAdminPayload struct {
 	AdminID string `json:"adminID,omitempty"`
 }
 
-type Entity struct {
-	Id   string  `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
-	Type string  `json:"type,omitempty"`
-}
-
 type RBACRole struct {
 	Id           string  `json:"id,omitempty"`
 	Name         string  `json:"name,omitempty"`
@@ -81,6 +75,12 @@ type AdminRole struct {
 	Role            RBACRole `json:"role,omitempty"`
 	AllowedEntities []Entity `json:"allowedEntities,omitempty"`
 	AllowedAccounts []string `json:"allowedAccounts,omitempty"`
+}
+
+type Entity struct {
+	Id   string  `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+	Type string  `json:"type,omitempty"`
 }
 
 type AdminsResult struct {

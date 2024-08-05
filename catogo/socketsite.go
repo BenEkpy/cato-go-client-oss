@@ -122,7 +122,7 @@ type AddStaticHostInput struct {
 	MacAddress *string `json:"macAddress,omitempty"`
 }
 
-type UdpdateStaticHostInput struct {
+type UpdateStaticHostInput struct {
 	Name       string  `json:"name,omitempty"`
 	Ip         string  `json:"ip,omitempty"`
 	MacAddress *string `json:"macAddress,omitempty"`
@@ -276,7 +276,7 @@ func (c *Client) UpdateSocketInterface(siteId string, socketInterfaceId string, 
 	return &response.Site.UpdateSocketInterface, nil
 }
 
-func (c *Client) addStaticHost(siteId string, input AddStaticHostInput) (*AddStaticHostPayload, error) {
+func (c *Client) AddStaticHost(siteId string, input AddStaticHostInput) (*AddStaticHostPayload, error) {
 	query := graphQLRequest{
 		Query: `
 		mutation addStaticHost($accountId:ID!,$siteId: ID!, $input: AddStaticHostInput!) {
@@ -300,7 +300,7 @@ func (c *Client) addStaticHost(siteId string, input AddStaticHostInput) (*AddSta
 
 	var response struct {
 		Site struct {
-			addStaticHost AddStaticHostPayload
+			AddStaticHost AddStaticHostPayload
 		}
 	}
 
@@ -309,5 +309,76 @@ func (c *Client) addStaticHost(siteId string, input AddStaticHostInput) (*AddSta
 		return nil, err
 	}
 
-	return &response.Site.addStaticHost, nil
+	return &response.Site.AddStaticHost, nil
+}
+
+func (c *Client) UpdateStaticHost(siteId string, hostId string, input UpdateStaticHostInput) (*UpdateStaticHostPayload, error) {
+	query := graphQLRequest{
+		Query: `
+		mutation updateStaticHost($accountId:ID!,$hostId: ID!, $input: UpdateStaticHostInput!) {
+		site(accountId:$accountId){
+			updateStaticHost(hostId:$hostId, input:$input){
+			hostId
+			}
+		}
+		}`,
+		Variables: map[string]interface{}{
+			"accountId": c.accountId,
+			"siteId":    siteId,
+			"hostId":    hostId,
+			"input":     input,
+		},
+	}
+
+	body, err := c.do(query)
+	if err != nil {
+		return nil, err
+	}
+
+	var response struct {
+		Site struct {
+			UpdateStaticHost UpdateStaticHostPayload
+		}
+	}
+
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.Site.UpdateStaticHost, nil
+}
+
+func (c *Client) RemoveStaticHost(siteId string, hostId string) (*RemoveStaticHostPayload, error) {
+	query := graphQLRequest{
+		Query: `
+		mutation removeStaticHost($accountId:ID!,$hostId: ID!) {
+		site(accountId:$accountId){
+			removeStaticHost(hostId:$hostId){
+			hostId
+			}
+		}
+		}`,
+		Variables: map[string]interface{}{
+			"accountId": c.accountId,
+			"siteId":    siteId,
+			"hostId":    hostId,
+		},
+	}
+
+	body, err := c.do(query)
+	if err != nil {
+		return nil, err
+	}
+
+	var response struct {
+		Site struct{ RemoveStaticHost RemoveStaticHostPayload }
+	}
+
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.Site.RemoveStaticHost, nil
 }

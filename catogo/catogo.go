@@ -27,6 +27,7 @@ type Response struct {
 		Admins          interface{} `json:"admins,omitempty"`
 		AccountRoles    interface{} `json:"accountRoles,omitempty"`
 		AccountSnapshot interface{} `json:"accountSnapshot,omitempty"`
+		EntityLookup    interface{} `json:"entityLookup,omitempty"`
 		Site            interface{} `json:"site,omitempty"`
 	} `json:"data,omitempty"`
 	Errors []interface{} `json:"errors,omitempty"`
