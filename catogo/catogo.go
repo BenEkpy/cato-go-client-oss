@@ -13,6 +13,7 @@ type Client struct {
 	httpclient *http.Client
 	token      string
 	baseurl    string
+	accountId  string
 }
 
 type graphQLRequest struct {
@@ -31,7 +32,7 @@ type Response struct {
 	Errors []interface{} `json:"errors,omitempty"`
 }
 
-func CatoClient(baseurl string, token string) *Client {
+func CatoClient(baseurl string, token string, accountId string) *Client {
 
 	client := &http.Client{
 		Timeout: 60 * time.Second,
@@ -41,6 +42,7 @@ func CatoClient(baseurl string, token string) *Client {
 		httpclient: client,
 		baseurl:    baseurl,
 		token:      token,
+		accountId:  accountId,
 	}
 }
 

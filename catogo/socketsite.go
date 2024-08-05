@@ -104,7 +104,7 @@ type UpdateSocketInterfacePayload struct {
 	SocketInterfaceId string `json:"socketInterfaceId,omitempty"`
 }
 
-func (c *Client) AddSocketSite(accountId string, input AddSocketSiteInput) (*AddSocketSitePayload, error) {
+func (c *Client) AddSocketSite(input AddSocketSiteInput) (*AddSocketSitePayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -116,7 +116,7 @@ func (c *Client) AddSocketSite(accountId string, input AddSocketSiteInput) (*Add
 		}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"input":     input,
 		},
 	}
@@ -138,7 +138,7 @@ func (c *Client) AddSocketSite(accountId string, input AddSocketSiteInput) (*Add
 	return &response.Site.AddSocketSite, nil
 }
 
-func (c *Client) RemoveSite(accountId string, siteId string) (*RemoveSitePayload, error) {
+func (c *Client) RemoveSite(siteId string) (*RemoveSitePayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -150,7 +150,7 @@ func (c *Client) RemoveSite(accountId string, siteId string) (*RemoveSitePayload
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"siteId":    siteId,
 		},
 	}
@@ -172,7 +172,7 @@ func (c *Client) RemoveSite(accountId string, siteId string) (*RemoveSitePayload
 	return &response.Site.RemoveSite, nil
 }
 
-func (c *Client) UpdateSiteGeneralDetails(accountId string, siteId string, input UpdateSiteGeneralDetailsInput) (*UpdateSiteGeneralDetailsPayload, error) {
+func (c *Client) UpdateSiteGeneralDetails(siteId string, input UpdateSiteGeneralDetailsInput) (*UpdateSiteGeneralDetailsPayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -184,7 +184,7 @@ func (c *Client) UpdateSiteGeneralDetails(accountId string, siteId string, input
 		}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"siteId":    siteId,
 			"input":     input,
 		},
@@ -209,7 +209,7 @@ func (c *Client) UpdateSiteGeneralDetails(accountId string, siteId string, input
 	return &response.Site.UpdateSiteGeneralDetails, nil
 }
 
-func (c *Client) UpdateSocketInterface(accountId string, siteId string, socketInterfaceId string, input UpdateSocketInterfaceInput) (*UpdateSocketInterfacePayload, error) {
+func (c *Client) UpdateSocketInterface(siteId string, socketInterfaceId string, input UpdateSocketInterfaceInput) (*UpdateSocketInterfacePayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -226,7 +226,7 @@ func (c *Client) UpdateSocketInterface(accountId string, siteId string, socketIn
 		}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId":         accountId,
+			"accountId":         c.accountId,
 			"siteId":            siteId,
 			"socketInterfaceId": socketInterfaceId,
 			"input":             input,

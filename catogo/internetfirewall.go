@@ -620,7 +620,7 @@ type InternetFirewallPolicyMutationPayload struct {
 	} `json:"data,omitempty"`
 }
 
-func (c *Client) GetInternetFirewallPolicy(accountId string) (*InternetFirewall, error) {
+func (c *Client) GetInternetFirewallPolicy() (*InternetFirewall, error) {
 
 	query := graphQLRequest{
 		Query: `query InternetFirewall($accountId: ID!) {
@@ -747,7 +747,7 @@ func (c *Client) GetInternetFirewallPolicy(accountId string) (*InternetFirewall,
 					}
         }`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 		},
 	}
 
@@ -766,9 +766,9 @@ func (c *Client) GetInternetFirewallPolicy(accountId string) (*InternetFirewall,
 	return &response, nil
 }
 
-func (c *Client) GetInternetFirewallRuleByName(accountId string, name string) (*InternetFirewallRule, error) {
+func (c *Client) GetInternetFirewallRuleByName(name string) (*InternetFirewallRule, error) {
 
-	policy, _ := c.GetInternetFirewallPolicy(accountId)
+	policy, _ := c.GetInternetFirewallPolicy()
 
 	rule := InternetFirewallRule{}
 
@@ -783,7 +783,7 @@ func (c *Client) GetInternetFirewallRuleByName(accountId string, name string) (*
 	return &rule, nil
 }
 
-func (c *Client) CreateInternetFirewallRule(accountId string, rule InternetFirewallAddRuleInput) (*InternetFirewallRuleMutationPayload, error) {
+func (c *Client) CreateInternetFirewallRule(rule InternetFirewallAddRuleInput) (*InternetFirewallRuleMutationPayload, error) {
 
 	query := graphQLRequest{
 		Query: `mutation AddInternetFirewallRule($accountId: ID!, $input: InternetFirewallAddRuleInput!) {
@@ -802,16 +802,8 @@ func (c *Client) CreateInternetFirewallRule(accountId string, rule InternetFirew
 					}
 				}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"input":     rule,
-			// "input": InternetFirewallAddRuleInput{
-			// 	Rule: InternetFirewallAddRuleDataInput{
-			// 		Name:        string(rule.Rule.Name),
-			// 		Source:      rule.Rule.Source,
-			// 		Destination: rule.Rule.Destination,
-			// 		// Destination: rule.Rule.Destination,
-			// 	},
-			// },
 		},
 	}
 	// DEBUG
@@ -833,7 +825,7 @@ func (c *Client) CreateInternetFirewallRule(accountId string, rule InternetFirew
 	return &response, nil
 }
 
-func (c *Client) PublishInternetFirewallDefaultPolicyRevision(accountId string) (*InternetFirewallPolicyMutationPayload, error) {
+func (c *Client) PublishInternetFirewallDefaultPolicyRevision() (*InternetFirewallPolicyMutationPayload, error) {
 
 	query := graphQLRequest{
 		Query: `mutation PublishFirewalRevision($accountId: ID!) {
@@ -846,7 +838,7 @@ func (c *Client) PublishInternetFirewallDefaultPolicyRevision(accountId string) 
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 		},
 	}
 

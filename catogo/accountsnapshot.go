@@ -195,7 +195,7 @@ type SiteSnapshot struct {
 	AltWanStatus       *string          `json:"altWanStatus,omitempty"`
 }
 
-func (c *Client) AccountSnapshotSite(accountId string) (*[]SiteSnapshot, error) {
+func (c *Client) AccountSnapshotSite() (*[]SiteSnapshot, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -358,7 +358,7 @@ func (c *Client) AccountSnapshotSite(accountId string) (*[]SiteSnapshot, error) 
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 		},
 	}
 
@@ -377,7 +377,7 @@ func (c *Client) AccountSnapshotSite(accountId string) (*[]SiteSnapshot, error) 
 	return &response.AccountSnapshot.Sites, nil
 }
 
-func (c *Client) AccountSnapshotSiteById(accountId string, siteId string) (*SiteSnapshot, error) {
+func (c *Client) AccountSnapshotSiteById(siteId string) (*SiteSnapshot, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -540,7 +540,7 @@ func (c *Client) AccountSnapshotSiteById(accountId string, siteId string) (*Site
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"siteId":    []string{siteId},
 		},
 	}

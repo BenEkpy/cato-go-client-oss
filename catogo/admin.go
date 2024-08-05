@@ -112,7 +112,7 @@ type AccountRolesResult struct {
 	Total int64      `json:"total,omitempty"`
 }
 
-func (c *Client) GetAdmins(accountId string) (*AdminsResult, error) {
+func (c *Client) GetAdmins() (*AdminsResult, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -170,7 +170,7 @@ func (c *Client) GetAdmins(accountId string) (*AdminsResult, error) {
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 		},
 	}
 
@@ -189,7 +189,7 @@ func (c *Client) GetAdmins(accountId string) (*AdminsResult, error) {
 	return &response.Admins, nil
 }
 
-func (c *Client) GetAdmin(accountId string, adminId string) (*GetAdminPayload, error) {
+func (c *Client) GetAdmin(adminId string) (*GetAdminPayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -233,7 +233,7 @@ func (c *Client) GetAdmin(accountId string, adminId string) (*GetAdminPayload, e
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"adminId":   adminId,
 		},
 	}
@@ -253,7 +253,7 @@ func (c *Client) GetAdmin(accountId string, adminId string) (*GetAdminPayload, e
 	return &response.Admin, nil
 }
 
-func (c *Client) GetAccountRoles(accountId string) (*AccountRolesResult, error) {
+func (c *Client) GetAccountRoles() (*AccountRolesResult, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -268,7 +268,7 @@ func (c *Client) GetAccountRoles(accountId string) (*AccountRolesResult, error) 
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 		},
 	}
 
@@ -287,9 +287,9 @@ func (c *Client) GetAccountRoles(accountId string) (*AccountRolesResult, error) 
 	return &response.AccountRoles, nil
 }
 
-func (c *Client) GetAccountRoleByName(accountId string, name string) (*RBACRole, error) {
+func (c *Client) GetAccountRoleByName(name string) (*RBACRole, error) {
 
-	accountRoles, _ := c.GetAccountRoles(accountId)
+	accountRoles, _ := c.GetAccountRoles()
 
 	accountRole := RBACRole{}
 
@@ -304,7 +304,7 @@ func (c *Client) GetAccountRoleByName(accountId string, name string) (*RBACRole,
 	return &accountRole, nil
 }
 
-func (c *Client) AddAdmin(accountId string, input AddAdminInput) (*AddAdminPayload, error) {
+func (c *Client) AddAdmin(input AddAdminInput) (*AddAdminPayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -316,7 +316,7 @@ func (c *Client) AddAdmin(accountId string, input AddAdminInput) (*AddAdminPaylo
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"input":     input,
 		},
 	}
@@ -338,7 +338,7 @@ func (c *Client) AddAdmin(accountId string, input AddAdminInput) (*AddAdminPaylo
 	return &response.Admin.AddAdmin, nil
 }
 
-func (c *Client) UpdateAdmin(accountId string, adminId string, input UpdateAdminInput) (*UpdateAdminPayload, error) {
+func (c *Client) UpdateAdmin(adminId string, input UpdateAdminInput) (*UpdateAdminPayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -350,7 +350,7 @@ func (c *Client) UpdateAdmin(accountId string, adminId string, input UpdateAdmin
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"adminId":   adminId,
 			"input":     input,
 		},
@@ -373,7 +373,7 @@ func (c *Client) UpdateAdmin(accountId string, adminId string, input UpdateAdmin
 	return &response.Admin.UpdateAdmin, nil
 }
 
-func (c *Client) RemoveAdmin(accountId string, adminId string) (*RemoveAdminPayload, error) {
+func (c *Client) RemoveAdmin(adminId string) (*RemoveAdminPayload, error) {
 
 	query := graphQLRequest{
 		Query: `
@@ -385,7 +385,7 @@ func (c *Client) RemoveAdmin(accountId string, adminId string) (*RemoveAdminPayl
 			}
 		}`,
 		Variables: map[string]interface{}{
-			"accountId": accountId,
+			"accountId": c.accountId,
 			"adminId":   adminId,
 		},
 	}
