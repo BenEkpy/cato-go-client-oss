@@ -2,7 +2,6 @@ package catogo
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 )
 
@@ -63,9 +62,6 @@ func (c *Client) GetSocketSiteNativeRangeId(siteId string) (*Entity, error) {
 
 		splitName := strings.Split(*item.Entity.Name, " \\ ")
 
-		fmt.Println(splitName)
-
-		fmt.Println(splitName[2])
 		if splitName[2] == "Native Range" {
 			entity = item.Entity
 		}
@@ -73,4 +69,44 @@ func (c *Client) GetSocketSiteNativeRangeId(siteId string) (*Entity, error) {
 	}
 
 	return &entity, nil
+}
+
+func (c *Client) SiteExists(siteId string) (bool, error) {
+
+	query := graphQLRequest{
+		Query: `
+		query entityLookup($accountId: ID!, $type: EntityType!, $siteId: [ID!]) {
+		entityLookup(accountID: $accountId, type: $type, entityIDs: $siteId) {
+			items {
+			entity {
+				id
+			}
+			}
+			total
+		}
+		}`,
+		Variables: map[string]interface{}{
+			"accountId": c.accountId,
+			"siteId":    siteId,
+			"type":      "site",
+		},
+	}
+
+	body, err := c.do(query)
+	if err != nil {
+		return false, err
+	}
+
+	var response struct{ EntityLookup EntityLookupResult }
+
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return false, err
+	}
+
+	if int(*response.EntityLookup.Total) == 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
 }
