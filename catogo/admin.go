@@ -77,12 +77,6 @@ type AdminRole struct {
 	AllowedAccounts []string `json:"allowedAccounts,omitempty"`
 }
 
-type Entity struct {
-	Id   string  `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
-	Type string  `json:"type,omitempty"`
-}
-
 type AdminsResult struct {
 	Items []Admin `json:"items,omitempty"`
 	Total int64   `json:"total,omitempty"`

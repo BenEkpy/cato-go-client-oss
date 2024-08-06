@@ -57,7 +57,7 @@ func (c *Client) do(reqBody graphQLRequest) ([]byte, error) {
 	}
 
 	//debug request
-	fmt.Println(string(jsonReqBody))
+	// fmt.Println(string(jsonReqBody))
 
 	req, err := http.NewRequest("POST", c.baseurl, bytes.NewBuffer(jsonReqBody))
 	if err != nil {
